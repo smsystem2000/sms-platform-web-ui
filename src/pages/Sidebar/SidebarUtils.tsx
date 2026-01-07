@@ -47,6 +47,18 @@ export const SchoolAdminMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "Classes",
+    icon: <MuiIcons.Class />,
+    path: "/school-admin/classes",
+    isExpandable: false,
+  },
+  {
+    name: "Subjects",
+    icon: <MuiIcons.MenuBook />,
+    path: "/school-admin/subjects",
+    isExpandable: false,
+  },
+  {
     name: "Teachers",
     icon: <MuiIcons.Person />,
     path: "/school-admin/teachers",
@@ -68,6 +80,12 @@ export const SchoolAdminMenuItems: SideBarMenuItemType[] = [
     name: "Requests",
     icon: <MuiIcons.Assignment />,
     path: "/school-admin/requests",
+    isExpandable: false,
+  },
+  {
+    name: "Attendance",
+    icon: <MuiIcons.CheckCircle />,
+    path: "/school-admin/attendance",
     isExpandable: false,
   },
   {
