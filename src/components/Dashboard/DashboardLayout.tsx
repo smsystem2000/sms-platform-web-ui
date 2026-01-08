@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 // import LogoutIcon from '@mui/icons-material/Logout';
@@ -11,9 +11,26 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    // Initialize sidebar state based on screen width - closed on mobile
+    const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 900);
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 900);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    // Track window resize to update isMobile state
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 900;
+            setIsMobile(mobile);
+            // Auto-close sidebar when switching to mobile
+            if (mobile && sidebarOpen) {
+                setSidebarOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [sidebarOpen]);
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
@@ -72,11 +89,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 sx={{
                     flexGrow: 1,
                     p: 3,
-                    marginLeft: sidebarOpen ? '250px' : 0,
+                    // On desktop, shift content when sidebar is open
+                    // On mobile, content stays in place (sidebar overlays on top)
+                    marginLeft: !isMobile && sidebarOpen ? '250px' : 0,
                     marginTop: '64px',
                     transition: 'margin-left 0.3s ease-in-out',
                     backgroundColor: '#f8fafc',
                     minHeight: 'calc(100vh - 64px)',
+                    width: '100%',
+                    overflowX: 'hidden',
                 }}
             >
                 {children}
