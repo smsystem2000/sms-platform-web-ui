@@ -22,7 +22,7 @@ import {
     ToggleButtonGroup,
     Card,
     CardContent,
-    Grid2 as Grid,
+    Grid,
 } from '@mui/material';
 import {
     Add as AddIcon,

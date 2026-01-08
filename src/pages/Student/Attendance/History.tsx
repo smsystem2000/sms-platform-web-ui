@@ -10,7 +10,7 @@ import {
     Alert,
     ToggleButton,
     ToggleButtonGroup,
-    Grid2 as Grid,
+    Grid,
     Table,
     TableBody,
     TableCell,

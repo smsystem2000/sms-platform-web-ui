@@ -14,7 +14,7 @@ import {
     Card,
     CardContent,
     Chip,
-    Grid2 as Grid,
+    Grid,
 } from '@mui/material';
 import {
     Send as SendIcon,
