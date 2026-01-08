@@ -20,6 +20,7 @@ import Requests from "../pages/SchoolAdmin/Requests";
 import SchoolAdminClasses from "../pages/SchoolAdmin/Classes";
 import SchoolAdminSubjects from "../pages/SchoolAdmin/Subjects";
 import SchoolAdminAttendance from "../pages/SchoolAdmin/Attendance";
+import SchoolAdminLeaveRequests from "../pages/SchoolAdmin/Leave/Requests";
 
 // Teacher Pages
 import TeacherDashboard from "../pages/Teacher/Dashboard";
@@ -34,9 +35,16 @@ import TeacherMyRequests from "../pages/Teacher/MyRequests";
 import StudentDashboard from "../pages/Student/Dashboard";
 import StudentClasses from "../pages/Student/Classes";
 import StudentAttendance from "../pages/Student/Attendance";
+import StudentAttendanceHistory from "../pages/Student/Attendance/History";
 import StudentResults from "../pages/Student/Results";
 import StudentProfile from "../pages/Student/Profile";
 import StudentMyRequests from "../pages/Student/MyRequests";
+import StudentApplyLeave from "../pages/Student/Leave/ApplyLeave";
+import StudentMyLeaves from "../pages/Student/Leave/MyLeaves";
+
+// Teacher Leave Pages (reuse Student structure with minor changes)
+import TeacherApplyLeave from "../pages/Teacher/Leave/ApplyLeave";
+import TeacherMyLeaves from "../pages/Teacher/Leave/MyLeaves";
 
 const MainRouters = () => {
   return (
@@ -62,6 +70,7 @@ const MainRouters = () => {
         <Route path="/school-admin/parents" element={<Parents />} />
         <Route path="/school-admin/requests" element={<Requests />} />
         <Route path="/school-admin/attendance" element={<SchoolAdminAttendance />} />
+        <Route path="/school-admin/leave" element={<SchoolAdminLeaveRequests />} />
         <Route path="/school-admin/profile" element={<SchoolAdminProfile />} />
       </Route>
 
@@ -73,6 +82,8 @@ const MainRouters = () => {
         <Route path="/teacher/parents" element={<TeacherParents />} />
         <Route path="/teacher/attendance" element={<TeacherAttendance />} />
         <Route path="/teacher/my-requests" element={<TeacherMyRequests />} />
+        <Route path="/teacher/leave/apply" element={<TeacherApplyLeave />} />
+        <Route path="/teacher/leave/my" element={<TeacherMyLeaves />} />
         <Route path="/teacher/profile" element={<TeacherProfile />} />
       </Route>
 
@@ -81,8 +92,11 @@ const MainRouters = () => {
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route path="/student/classes" element={<StudentClasses />} />
         <Route path="/student/attendance" element={<StudentAttendance />} />
+        <Route path="/student/attendance/history" element={<StudentAttendanceHistory />} />
         <Route path="/student/results" element={<StudentResults />} />
         <Route path="/student/my-requests" element={<StudentMyRequests />} />
+        <Route path="/student/leave/apply" element={<StudentApplyLeave />} />
+        <Route path="/student/leave/my" element={<StudentMyLeaves />} />
         <Route path="/student/profile" element={<StudentProfile />} />
       </Route>
 
