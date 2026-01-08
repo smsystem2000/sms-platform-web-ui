@@ -40,10 +40,10 @@ export interface CreateSchoolPayload {
     schoolContact?: string;
     schoolWebsite?: string;
     attendanceSettings?: {
-        mode: "simple" | "period_wise" | "check_in_out";
+        mode?: "simple" | "period_wise" | "check_in_out";
         workingHours?: {
-            start: string;
-            end: string;
+            start?: string;
+            end?: string;
         };
         lateThresholdMinutes?: number;
         halfDayThresholdMinutes?: number;
@@ -602,4 +602,56 @@ export interface ClassWiseReport {
     leave: number;
     total: number;
     percentage: string;
+}
+
+// ==========================================
+// Leave Management Types
+// ==========================================
+export type LeaveType = "casual" | "sick" | "emergency" | "personal" | "other";
+export type LeaveStatus = "pending" | "approved" | "rejected";
+export type ApplicantType = "student" | "teacher";
+
+export interface LeaveRequest {
+    leaveId: string;
+    schoolId: string;
+    applicantId: string;
+    applicantType: ApplicantType;
+    applicantName?: string;
+    classId?: string;
+    sectionId?: string;
+    leaveType: LeaveType;
+    startDate: string;
+    endDate: string;
+    reason: string;
+    status: LeaveStatus;
+    processedBy?: string;
+    processedByName?: string;
+    processedAt?: string;
+    approvalRemarks?: string;
+    numberOfDays: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ApplyLeavePayload {
+    leaveType: LeaveType;
+    startDate: string;
+    endDate: string;
+    reason: string;
+    classId?: string;
+    sectionId?: string;
+}
+
+export interface ProcessLeavePayload {
+    action: "approve" | "reject";
+    remarks?: string;
+}
+
+export interface LeaveSummary {
+    total: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+    students?: number;
+    teachers?: number;
 }
