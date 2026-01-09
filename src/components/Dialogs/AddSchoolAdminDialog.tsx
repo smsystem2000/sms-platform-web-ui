@@ -214,7 +214,7 @@ const SchoolAdminDialog: React.FC<SchoolAdminDialogProps> = ({ open, onClose, ed
 
                         <TextField
                             name="password"
-                            label={isEditMode ? "Password (leave blank to keep current)" : "Password"}
+                            label={"Password"}
                             type="password"
                             value={formData.password}
                             onChange={handleChange}

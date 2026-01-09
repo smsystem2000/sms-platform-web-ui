@@ -51,6 +51,7 @@ import Assignment from "@mui/icons-material/Assignment";
 import Class from "@mui/icons-material/Class";
 import MenuBook from "@mui/icons-material/MenuBook";
 import EventNote from "@mui/icons-material/EventNote";
+import LocationOn from "@mui/icons-material/LocationOn";
 
 export const MuiIcons = {
   Dashboard,
@@ -107,4 +108,5 @@ export const MuiIcons = {
   Class,
   MenuBook,
   EventNote,
+  LocationOn,
 };

@@ -235,7 +235,7 @@ const ParentDialog: React.FC<ParentDialogProps> = ({ open, onClose, schoolId, ed
                                 required fullWidth />
                         </Grid>
                         <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField name="password" label={isEditMode ? "Password (leave blank)" : "Password"}
+                            <TextField name="password" label={"Password"}
                                 type="password" value={formData.password} onChange={handleChange}
                                 error={!!errors.password} helperText={errors.password} required={!isEditMode} fullWidth />
                         </Grid>

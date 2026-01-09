@@ -39,9 +39,9 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
         email: '',
         password: '',
         phone: '',
-        department: '',
         subjects: [],
         classes: [],
+        sections: [],
         status: 'active',
     });
 
@@ -82,9 +82,9 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                 email: editData.email || '',
                 password: '',
                 phone: editData.phone || '',
-                department: editData.department || '',
                 subjects: editData.subjects || [],
                 classes: editData.classes || [],
+                sections: editData.sections || [],
                 status: editData.status || 'active',
             });
         } else {
@@ -94,9 +94,9 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                 email: '',
                 password: '',
                 phone: '',
-                department: '',
                 subjects: [],
                 classes: [],
+                sections: [],
                 status: 'active',
             });
         }
@@ -158,9 +158,9 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
             email: '',
             password: '',
             phone: '',
-            department: '',
             subjects: [],
             classes: [],
+            sections: [],
             status: 'active',
         });
         setErrors({});
@@ -233,7 +233,7 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                         <Grid size={{ xs: 12 }}>
                             <TextField
                                 name="password"
-                                label={isEditMode ? "Password (leave blank to keep)" : "Password"}
+                                label={"Password"}
                                 type="password"
                                 value={formData.password}
                                 onChange={handleChange}
@@ -252,15 +252,7 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                                 fullWidth
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                name="department"
-                                label="Department"
-                                value={formData.department}
-                                onChange={handleChange}
-                                fullWidth
-                            />
-                        </Grid>
+
 
                         {/* Classes Multi-Select */}
                         <Grid size={{ xs: 12 }}>
@@ -270,9 +262,18 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                                 getOptionLabel={(option) => option.label}
                                 value={classOptions.filter(opt => formData.classes?.includes(opt.id))}
                                 onChange={(_, newValue) => {
+                                    const newClassIds = newValue.map(v => v.id);
+                                    // Clear sections that are no longer valid when classes change
+                                    const validSections = formData.sections?.filter(sId => {
+                                        return classes.some(c =>
+                                            newClassIds.includes(c.classId) &&
+                                            c.sections.some(s => s.sectionId === sId)
+                                        );
+                                    }) || [];
                                     setFormData(prev => ({
                                         ...prev,
-                                        classes: newValue.map(v => v.id),
+                                        classes: newClassIds,
+                                        sections: validSections,
                                     }));
                                 }}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -308,6 +309,68 @@ const TeacherDialog: React.FC<TeacherDialogProps> = ({ open, onClose, schoolId, 
                                 )}
                             />
                         </Grid>
+
+                        {/* Sections Multi-Select - Only show if classes are selected */}
+                        {formData.classes && formData.classes.length > 0 && (
+                            <Grid size={{ xs: 12 }}>
+                                <Autocomplete
+                                    multiple
+                                    options={
+                                        classes
+                                            .filter(c => formData.classes?.includes(c.classId))
+                                            .flatMap(c =>
+                                                c.sections.map(s => ({
+                                                    id: s.sectionId,
+                                                    label: `${c.name} - ${s.name}`,
+                                                    className: c.name,
+                                                    sectionName: s.name
+                                                }))
+                                            )
+                                    }
+                                    getOptionLabel={(option) => option.label}
+                                    value={
+                                        classes
+                                            .filter(c => formData.classes?.includes(c.classId))
+                                            .flatMap(c =>
+                                                c.sections
+                                                    .filter(s => formData.sections?.includes(s.sectionId))
+                                                    .map(s => ({
+                                                        id: s.sectionId,
+                                                        label: `${c.name} - ${s.name}`,
+                                                        className: c.name,
+                                                        sectionName: s.name
+                                                    }))
+                                            )
+                                    }
+                                    onChange={(_, newValue) => {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            sections: newValue.map(v => v.id),
+                                        }));
+                                    }}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Assigned Sections (Optional)"
+                                            placeholder="Select specific sections"
+                                            helperText="Leave empty to assign to entire class"
+                                        />
+                                    )}
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip
+                                                label={option.label}
+                                                {...getTagProps({ index })}
+                                                key={option.id}
+                                                color="secondary"
+                                                variant="outlined"
+                                            />
+                                        ))
+                                    }
+                                />
+                            </Grid>
+                        )}
 
                         {/* Subjects Multi-Select */}
                         <Grid size={{ xs: 12 }}>

@@ -53,9 +53,25 @@ const TeacherStudentsPage = () => {
             minWidth: 150,
             format: (_, row) => `${row.firstName} ${row.lastName}`,
         },
-        { id: 'class', label: 'Class', minWidth: 80 },
-        { id: 'section', label: 'Section', minWidth: 80 },
+        {
+            id: 'class',
+            label: 'Class',
+            minWidth: 80,
+            format: (value, row) => row.className || value || '-',
+        },
+        {
+            id: 'section',
+            label: 'Section',
+            minWidth: 80,
+            format: (value, row) => row.sectionName || value || '-',
+        },
         { id: 'rollNumber', label: 'Roll No', minWidth: 80 },
+        {
+            id: 'parentName',
+            label: 'Parent',
+            minWidth: 120,
+            format: (value, row) => value || (row.parentId ? 'Unknown' : 'Not Linked'),
+        },
         { id: 'phone', label: 'Phone', minWidth: 120 },
         {
             id: 'status',

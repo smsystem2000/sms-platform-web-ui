@@ -55,7 +55,6 @@ const TeachersPage = () => {
         },
         { id: 'email', label: 'Email', minWidth: 180 },
         { id: 'phone', label: 'Phone', minWidth: 120 },
-        { id: 'department', label: 'Department', minWidth: 120 },
         {
             id: 'status',
             label: 'Status',

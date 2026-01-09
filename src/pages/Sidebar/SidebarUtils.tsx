@@ -95,6 +95,12 @@ export const SchoolAdminMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "School Location",
+    icon: <MuiIcons.LocationOn />,
+    path: "/school-admin/location",
+    isExpandable: false,
+  },
+  {
     name: "Profile",
     icon: <MuiIcons.AccountCircle />,
     path: "/school-admin/profile",

@@ -17,6 +17,11 @@ export interface School {
     schoolEmail?: string;
     schoolContact?: string;
     schoolWebsite?: string;
+    location?: {
+        latitude: number;
+        longitude: number;
+        radiusMeters: number;
+    };
     attendanceSettings?: {
         mode: "simple" | "period_wise" | "check_in_out";
         workingHours: {
@@ -59,6 +64,11 @@ export interface UpdateSchoolPayload {
     schoolEmail?: string;
     schoolContact?: string;
     schoolWebsite?: string;
+    location?: {
+        latitude: number;
+        longitude: number;
+        radiusMeters: number;
+    };
     attendanceSettings?: {
         mode?: "simple" | "period_wise" | "check_in_out";
         workingHours?: {
@@ -125,9 +135,9 @@ export interface Teacher {
     lastName: string;
     email: string;
     phone?: string;
-    department?: string;
     subjects: string[];
     classes: string[];
+    sections?: string[];
     status: "active" | "inactive";
     profileImage?: string;
     createdAt?: string;
@@ -140,9 +150,9 @@ export interface CreateTeacherPayload {
     email: string;
     password: string;
     phone?: string;
-    department?: string;
     subjects?: string[];
     classes?: string[];
+    sections?: string[];
     status?: "active" | "inactive";
     profileImage?: string;
 }
@@ -153,9 +163,9 @@ export interface UpdateTeacherPayload {
     email?: string;
     password?: string;
     phone?: string;
-    department?: string;
     subjects?: string[];
     classes?: string[];
+    sections?: string[];
     status?: "active" | "inactive";
     profileImage?: string;
 }
@@ -169,9 +179,12 @@ export interface Student {
     email?: string;
     phone?: string;
     class: string;
+    className?: string;
     section?: string;
+    sectionName?: string;
     rollNumber?: string;
     parentId?: string;
+    parentName?: string;
     dateOfBirth?: string;
     gender?: "male" | "female" | "other";
     address?: string;
@@ -260,7 +273,6 @@ export interface UpdateParentPayload {
 
 // Query Filter Types
 export interface TeacherFilters {
-    department?: string;
     status?: "active" | "inactive";
 }
 
