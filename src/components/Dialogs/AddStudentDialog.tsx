@@ -19,7 +19,8 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useCreateStudent, useUpdateStudent } from '../../queries/Student';
 import { searchParentsApi } from '../../queries/Parent';
-import type { CreateStudentPayload, Student, Parent } from '../../types';
+import { useGetClasses } from '../../queries/Class';
+import type { CreateStudentPayload, Student, Parent, Class, Section } from '../../types';
 
 interface StudentDialogProps {
     open: boolean;
@@ -69,6 +70,14 @@ const StudentDialog: React.FC<StudentDialogProps> = ({ open, onClose, schoolId, 
 
     const createMutation = useCreateStudent(schoolId);
     const updateMutation = useUpdateStudent(schoolId);
+
+    // Fetch classes from backend
+    const { data: classesData } = useGetClasses(schoolId);
+    const classes = classesData?.data || [];
+
+    // Get sections for selected class
+    const selectedClassData = classes.find((c: Class) => c.classId === formData.class);
+    const selectedClassSections = selectedClassData?.sections || [];
 
     // Fetch parents when search query changes
     useEffect(() => {
@@ -243,18 +252,42 @@ const StudentDialog: React.FC<StudentDialogProps> = ({ open, onClose, schoolId, 
                                 onChange={handleChange} error={!!errors.email} helperText={errors.email} fullWidth />
                         </Grid>
                         <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField name="password" label={isEditMode ? "Password (leave blank)" : "Password"}
+                            <TextField name="password" label={"Password"}
                                 type="password" value={formData.password} onChange={handleChange}
                                 error={!!errors.password} helperText={errors.password} required={!isEditMode} fullWidth />
                         </Grid>
                         <Grid size={{ xs: 12, sm: 4 }}>
-                            <TextField name="class" label="Class" value={formData.class}
-                                onChange={handleChange} error={!!errors.class} helperText={errors.class}
-                                required fullWidth />
+                            <FormControl fullWidth required error={!!errors.class}>
+                                <InputLabel>Class</InputLabel>
+                                <Select
+                                    value={formData.class}
+                                    label="Class"
+                                    onChange={(e) => {
+                                        setFormData(prev => ({ ...prev, class: e.target.value, section: '' }));
+                                        if (errors.class) setErrors(prev => ({ ...prev, class: '' }));
+                                    }}
+                                >
+                                    {classes.filter((c: Class) => c.status === 'active').map((c: Class) => (
+                                        <MenuItem key={c.classId} value={c.classId}>{c.name}</MenuItem>
+                                    ))}
+                                </Select>
+                                {errors.class && <span style={{ color: '#d32f2f', fontSize: '0.75rem', marginTop: 3 }}>{errors.class}</span>}
+                            </FormControl>
                         </Grid>
                         <Grid size={{ xs: 12, sm: 4 }}>
-                            <TextField name="section" label="Section" value={formData.section}
-                                onChange={handleChange} fullWidth />
+                            <FormControl fullWidth disabled={!formData.class}>
+                                <InputLabel>Section</InputLabel>
+                                <Select
+                                    value={formData.section}
+                                    label="Section"
+                                    onChange={(e) => setFormData(prev => ({ ...prev, section: e.target.value }))}
+                                >
+                                    <MenuItem value="">None</MenuItem>
+                                    {selectedClassSections.map((s: Section) => (
+                                        <MenuItem key={s.sectionId} value={s.sectionId}>{s.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid size={{ xs: 12, sm: 4 }}>
                             <TextField name="rollNumber" label="Roll Number" value={formData.rollNumber}

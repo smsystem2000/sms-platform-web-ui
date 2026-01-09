@@ -258,11 +258,11 @@ export const useGetDailyCheckins = (schoolId: string, date: string, options?: { 
 export const useTeacherCheckIn = (schoolId: string) => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: () =>
+        mutationFn: (data: { latitude?: number; longitude?: number }) =>
             useApi<ApiResponse<TeacherAttendance>>(
                 "POST",
                 `/api/school/${schoolId}/attendance/teacher/check-in`,
-                {}
+                data
             ),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: attendanceKeys.teacherStatus(schoolId) });

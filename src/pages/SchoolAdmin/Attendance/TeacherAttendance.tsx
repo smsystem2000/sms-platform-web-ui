@@ -145,7 +145,6 @@ const TeacherAttendancePage = () => {
                                 <TableCell>#</TableCell>
                                 <TableCell>Teacher ID</TableCell>
                                 <TableCell>Name</TableCell>
-                                <TableCell>Department</TableCell>
                                 <TableCell align="center">Status</TableCell>
                             </TableRow>
                         </TableHead>
@@ -157,7 +156,6 @@ const TeacherAttendancePage = () => {
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{teacher.teacherId}</TableCell>
                                         <TableCell>{teacher.firstName} {teacher.lastName}</TableCell>
-                                        <TableCell>{teacher.department || '-'}</TableCell>
                                         <TableCell align="center">
                                             <ToggleButtonGroup
                                                 size="small"

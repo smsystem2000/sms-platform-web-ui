@@ -31,6 +31,7 @@ import {
 import { useGetClasses } from '../../../queries/Class';
 import { useGetStudents } from '../../../queries/Student';
 import { useGetSimpleClassAttendance, useMarkSimpleAttendance } from '../../../queries/Attendance';
+import { useGetTeacherById } from '../../../queries/Teacher';
 import type { Student, AttendanceStatus } from '../../../types';
 import TokenService from '../../../queries/token/tokenService';
 
@@ -42,15 +43,27 @@ interface AttendanceRecord {
 
 const SimpleAttendance = () => {
     const schoolId = TokenService.getSchoolId() || '';
+    const teacherId = TokenService.getTeacherId() || '';
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedSection, setSelectedSection] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [attendance, setAttendance] = useState<Record<string, AttendanceRecord>>({});
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
-    // Fetch classes
+    // Fetch teacher profile to get assigned classes/sections
+    const { data: teacherData } = useGetTeacherById(schoolId, teacherId);
+    const teacher = teacherData?.data;
+    const teacherClasses = teacher?.classes || [];
+    const teacherSections = teacher?.sections || [];
+
+    // Fetch all classes
     const { data: classesData, isLoading: classesLoading } = useGetClasses(schoolId);
-    const classes = classesData?.data || [];
+    const allClasses = classesData?.data || [];
+
+    // Filter classes to only show teacher's assigned classes
+    const classes = teacherClasses.length > 0
+        ? allClasses.filter(c => teacherClasses.includes(c.classId))
+        : allClasses;
 
     // Get sections for selected class
     const selectedClassData = classes.find(c => c.classId === selectedClass);
@@ -73,6 +86,27 @@ const SimpleAttendance = () => {
 
     // Mark attendance mutation
     const markAttendance = useMarkSimpleAttendance(schoolId);
+
+    // Filter sections to teacher's assigned sections (if any)
+    const filteredSections = teacherSections.length > 0
+        ? sections.filter(s => teacherSections.includes(s.sectionId))
+        : sections;
+
+    // Auto-select class if teacher has only one assigned class
+    useEffect(() => {
+        if (classes.length === 1 && !selectedClass) {
+            setSelectedClass(classes[0].classId);
+        }
+    }, [classes, selectedClass]);
+
+    // Auto-select section if there's only one available section
+    useEffect(() => {
+        if (filteredSections.length === 1 && !selectedSection) {
+            setSelectedSection(filteredSections[0].sectionId);
+        } else if (filteredSections.length === 0 && selectedSection) {
+            setSelectedSection('');
+        }
+    }, [filteredSections, selectedSection]);
 
     // Initialize attendance from existing data only
     useEffect(() => {
@@ -169,6 +203,7 @@ const SimpleAttendance = () => {
                         <Select
                             value={selectedClass}
                             label="Class"
+                            disabled={classes.length === 1}
                             onChange={(e) => {
                                 setSelectedClass(e.target.value);
                                 setSelectedSection('');
@@ -180,19 +215,20 @@ const SimpleAttendance = () => {
                             ))}
                         </Select>
                     </FormControl>
-                    {sections.length > 0 && (
+                    {filteredSections.length > 0 && (
                         <FormControl sx={{ minWidth: 120 }}>
                             <InputLabel>Section</InputLabel>
                             <Select
                                 value={selectedSection}
                                 label="Section"
+                                disabled={filteredSections.length === 1}
                                 onChange={(e) => {
                                     setSelectedSection(e.target.value);
                                     setAttendance({});
                                 }}
                             >
-                                <MenuItem value="">All Sections</MenuItem>
-                                {sections.map(s => (
+                                {filteredSections.length > 1 && <MenuItem value="">All Sections</MenuItem>}
+                                {filteredSections.map(s => (
                                     <MenuItem key={s.sectionId} value={s.sectionId}>{s.name}</MenuItem>
                                 ))}
                             </Select>

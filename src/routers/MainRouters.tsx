@@ -21,6 +21,7 @@ import SchoolAdminClasses from "../pages/SchoolAdmin/Classes";
 import SchoolAdminSubjects from "../pages/SchoolAdmin/Subjects";
 import SchoolAdminAttendance from "../pages/SchoolAdmin/Attendance";
 import SchoolAdminLeaveRequests from "../pages/SchoolAdmin/Leave/Requests";
+import SchoolLocation from "../pages/SchoolAdmin/SchoolLocation";
 
 // Teacher Pages
 import TeacherDashboard from "../pages/Teacher/Dashboard";
@@ -72,6 +73,7 @@ const MainRouters = () => {
         <Route path="/school-admin/requests" element={<Requests />} />
         <Route path="/school-admin/attendance" element={<SchoolAdminAttendance />} />
         <Route path="/school-admin/leave" element={<SchoolAdminLeaveRequests />} />
+        <Route path="/school-admin/location" element={<SchoolLocation />} />
         <Route path="/school-admin/profile" element={<SchoolAdminProfile />} />
       </Route>
 
